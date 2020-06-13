@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active"><a href="#home" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#booking" class="nav-link">Bookings</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Bookings</a></li>
                     <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
                     <li class="nav-item"><a href="#working" class="nav-link">Our Working</a></li>
                     <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
@@ -51,10 +51,10 @@
                 </div>
                 <div class="col-lg-2 col"></div>
                 <div class="col-lg-4 col-md-6 mt-0 mt-md-5 d-flex">
-                    <form action="#" class="request-form ftco-animate">
+                    <form method="get" action="" class="request-form ftco-animate">
                         <h2>Schedule your trip</h2>
                         <div class="form-group">
-                            <label for="" class="label">Pick-up location</label>
+                            <label class="label">Pick-up location</label>
                             <select id="choice1" class="selectpicker" data-width="310px">
                               <option>Select Source</option>
                               {% for key, value in chain_dict.items %}
@@ -63,24 +63,24 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="" class="label">Drop-off location</label>
+                            <label class="label">Drop-off location</label>
                             <select id="choice2" class="selectpicker" data-width="310px">
                                 <option>Select Destination</option>
                                 <option></option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="" class="label">Number of Passenger</label>
+                            <label class="label">Number of Passenger</label>
                             <input type="text" class="form-control" placeholder="Enter number of passenger">
                         </div>
                         <div class="d-flex">
                             <div class="form-group mr-2">
-                                <label for="" class="label">Journey date</label>
+                                <label class="label">Journey date</label>
                                 <input type="text" class="form-control" id="book_pick_date" placeholder="Date">
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Search Buses" class="btn btn-primary py-3 px-4">
+                            <input id="search_bus" type="submit" value="Search Buses" class="btn btn-primary py-3 px-4">
                         </div>
                     </form>
                 </div>
@@ -90,7 +90,7 @@
     <section class="ftco-section ftco-no-pt ftco-no-pb about" id="about">
         <div class="container">
             <div class="row no-gutters">
-                <div class="col-md-6 p-md-5 img img-2 d-flex justify-content-center align- -center" style="background-image: url('{% static " booking/images/about.jpg" %}');">
+                <div class="col-md-6 p-md-5 img img-2 d-flex justify-content-center align- -center" style="background-image: url('{% static "booking/images/about.jpg" %}');">
                 </div>
                 <div class="col-md-6 wrap-about py-md-5 ftco-animate">
                     <div class="heading-section mb-5 pl-md-5">
@@ -103,13 +103,13 @@
             </div>
         </div>
     </section>
-    <section class="ftco-section services-section img working" id="working" style="background-image: url('{% static " booking/images/bg_2.jpg" %}');">
+    <section class="ftco-section services-section img working" id="working" style="background-image: url('{% static "booking/images/bg_2.jpg" %}');">
         <div class="overlay"></div>
         <div class="container">
             <div class="row justify-content-center mb-5">
                 <div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
                     <span class="subheading">Work flow</span>
-                    <h2 class="mb-3">How it works</h2>
+                    <h2 class="mb-3">How we work</h2>
                 </div>
             </div>
             <div class="row">
@@ -245,6 +245,10 @@
               $('#choice2').append("<option>" + value + "</option>").selectpicker('refresh');
           });
       });
+
+      $("search_bus").click(function(){
+      $.ajax({type: 'GET', url: "{% url 'booking' %}"})
+    });
     </script>
 </body>
 

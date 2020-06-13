@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 from booking.models import *
 
 
@@ -14,18 +14,22 @@ class HomePageView(TemplateView):
         values = BusService.objects.values_list('source', 'destination')
         chain_dict = {} 
         for key, value in values:
-            if key not in chain_dict.keys(): 
+            if key not in chain_dict.keys():
                 chain_dict[key] = [value] 
             else: 
                 chain_dict[key].append(value)
         context['chain_dict'] = chain_dict
         return context
 
-class BookingListView(ListView):
+class BookingListView(DetailView):
+
     model = BusTiming
     template_name = "booking/bookinglist.html"
+    # import ipdb; ipdb.set_trace()
+    # def get_queryset(self, *args, **kwargs):
+    #     qs = super(BookingListView, self).get_queryset(*args, **kwargs) 
+    #     qs = qs.order_by("-id") 
+    #     return qs
 
-    def get_queryset(self, *args, **kwargs): 
-        qs = super(BookingListView, self).get_queryset(*args, **kwargs) 
-        qs = qs.order_by("-id") 
-        return qs 
+    def get(self, request, *args, **kwargs):
+        import ipdb; ipdb.set_trace()
