@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.postgres.fields import HStoreField
 # Create your models here.
 
 class CustomerLogin(models.Model):
@@ -67,5 +67,11 @@ class BusTiming(models.Model):
     service = models.ForeignKey(BusService, on_delete=models.CASCADE)
     departure_time = models.TimeField()
     desstination_time = models.TimeField()
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+class Query(models.Model):
+
+    attrs = HStoreField()
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)

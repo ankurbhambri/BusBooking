@@ -18,8 +18,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+admin.site.site_header = "Bus Booking Admin Central"
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('depadmin/', admin.site.urls),
     path('', include('booking.urls')),
 ]
 

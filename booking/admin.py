@@ -1,6 +1,7 @@
 from django.contrib import admin
 from booking.models import (CustomerLogin, VehicalDetail,
-                            DriverDetail, BusService, BusTiming)
+                            DriverDetail, BusService, BusTiming,
+                            Query)
 
 
 # Register your models here.
@@ -46,5 +47,12 @@ class BusServiceAdmin(admin.ModelAdmin):
     inlines = [BusTimingAdmin,]
     
     raw_id_fields = ('driver_email',)
+
+
+@admin.register(Query)
+class QueryAdmin(admin.ModelAdmin):
+
+    list_display = ("attrs", "created_date", "modified_date")
+    search_fields = ("id",)
 
 
