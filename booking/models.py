@@ -33,7 +33,7 @@ class VehicalDetail(models.Model):
     non_ac = models.BooleanField()
 
     def __str__(self):
-        return self.vehicle_name    
+        return self.vehicle_name
 
 
 class DriverDetail(models.Model):

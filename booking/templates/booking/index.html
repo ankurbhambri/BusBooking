@@ -51,36 +51,39 @@
                 </div>
                 <div class="col-lg-2 col"></div>
                 <div class="col-lg-4 col-md-6 mt-0 mt-md-5 d-flex">
-                    <form method="get" action="{% url 'booking' %}" class="request-form ftco-animate">
+                    <form action="{% url "booking" %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div  class="request-form ftco-animate">
                         <h2>Schedule your trip</h2>
                         <div class="form-group">
                             <label class="label">Pick-up location</label>
-                            <select id="choice1" class="selectpicker" data-width="310px">
+                            <select id="choice1" class="selectpicker" name="choice1" data-width="310px">
                               <option>Select Source</option>
                               {% for key, value in chain_dict.items %}
-                                <option value="key">{{key}}</option>
+                                <option value="{{key}}">{{key}}</option>
                               {% endfor %}
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="label">Drop-off location</label>
-                            <select id="choice2" class="selectpicker" data-width="310px">
-                                <option>Select Destination</option>
+                            <select id="choice2" class="selectpicker" name="choice2" data-width="310px">
+                                <option value="">Select Destination</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="label">Number of Passenger</label>
-                            <input id="passenger" type="text" class="form-control" placeholder="Enter number of passenger">
+                            <input id="passenger" name="passenger" type="text" class="form-control" placeholder="Enter number of passenger">
                         </div>
                         <div class="d-flex">
                             <div class="form-group mr-2">
                                 <label class="label">Journey date</label>
-                                <input id="date" type="text" class="form-control" id="book_pick_date" placeholder="Date">
+                                <input id="date" name="date" type="text" class="form-control" placeholder="Date">
                             </div>
                         </div>
                         <div class="form-group">
                             <input id="search_bus" type="submit" value="Search Buses" class="btn btn-primary py-3 px-4">
                         </div>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -258,7 +261,7 @@
             $.ajax(
                {
                   "type": "GET",
-                  "url": "",
+                  "url": "booking",
                   "data": {
                      "choice1": choice1,
                      "choice2": choice2,

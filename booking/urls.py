@@ -1,5 +1,5 @@
 from django.urls import path
-from booking import views
+# from booking import views
 from booking.views import HomePageView, BookingListView
 
 urlpatterns = [
