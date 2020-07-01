@@ -54,3 +54,6 @@ class BookingListView(ListView):
     #         return render(request, self.template_name, {'context': context})
     #     else:
     #         return render(request, self.template_name, {'context': context})
+
+
+# clas
