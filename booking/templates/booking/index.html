@@ -253,31 +253,19 @@
         });
     });
 
-    $("#search_bus").click(function() {
-        var choice1 = $('#choice1').val();
-        var choice2 = $('#choice2').val();
-        var passenger = $('#passenger').val();
-        var date = $('#date').val();
-        if (choice1 == "" || choice2 == "" || passenger == "" || date == "") {
-            alert("Please Enter Value");
-            return false;
-        } 
-        else {
-            $.ajax({
-                "type": "GET",
-                "url": "booking",
-                "data": {
-                    "choice1": choice1,
-                    "choice2": choice2,
-                    "passenger": passenger,
-                    "date": date,
-                    "action": 'query',
-                },
-                "contentType": "application/json; charset=utf-8",
-                "dataType": 'json',
-            });
-        }
-    });
+    // $("#search_bus").click(function() {
+    //     var choice1 = $('#choice1').val();
+    //     var choice2 = $('#choice2').val();
+    //     var passenger = $('#passenger').val();
+    //     var date = $('#date').val();
+    //     if (choice1 == "" || choice2 == "" || passenger == "" || date == "") {
+    //         alert("Please Enter Value");
+    //         return false;
+    //     } 
+    //     else {
+    //         return true
+    //     }
+    // });
     </script>
     </script>
 </body>

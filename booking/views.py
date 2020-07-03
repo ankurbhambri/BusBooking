@@ -1,9 +1,6 @@
-from django.shortcuts import render
-# from django.http import HttpResponse
-from django.views.generic import TemplateView, ListView
-# from django.views.generic.edit import FormView
-from booking.models import *
-# from booking.forms import QueryForm
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, ListView, DetailView
+from booking.models import BusService, BusTiming, Query
 
 
 class HomePageView(TemplateView):
@@ -35,25 +32,75 @@ class BookingListView(ListView):
 
     def post(self, request, *args, **kwargs):
         context = dict()
+        query_dict = dict()
         choice1 = request.POST.get('choice1')
         choice2 = request.POST.get('choice2')
         passenger = request.POST.get('passenger')
         date = request.POST.get('date')
-        context['date'] = date
-        query = BusTiming.objects.filter(
+
+        one_side_query = BusTiming.objects.filter(
             service__source=choice1, service__destination=choice2,
             service__passanger_capacity__gte=passenger)
-        context['query'] = query
+
+        query_dict['one_side'] = {
+            'source': choice1,
+            'destination': choice2,
+            'passenger': int(passenger),
+            'journey_date': date,
+            'departure_location': one_side_query[0].service.souce_bus_stand_location,
+            'arival_location': one_side_query[0].service.destination_bus_stand_location,
+            'departure_time': one_side_query[0].departure_time.strftime("%m/%d/%Y"),
+            'desstination_time': one_side_query[0].desstination_time.strftime("%m/%d/%Y"),
+            'total_price': int(passenger) * int(one_side_query[0].service.per_passanger_price)}
+
+        return_query = BusTiming.objects.filter(
+            service__source=choice2, service__destination=choice1,
+            service__passanger_capacity__gte=passenger)
+
+        if return_query:
+            query_dict['return_query'] = {
+                'source': choice2,
+                'destination': choice1,
+                'passenger': int(passenger),
+                'journey_date': date,
+                'departure_location': return_query[0].service.souce_bus_stand_location,
+                'arival_location': return_query[0].service.destination_bus_stand_location,
+                'departure_time': return_query[0].departure_time.strftime("%m/%d/%Y"),
+                'desstination_time': return_query[0].desstination_time.strftime("%m/%d/%Y"),
+                'total_price': int(passenger) * int(return_query[0].service.per_passanger_price)}
+
+        query_dict['amt'] = int(passenger) * int(one_side_query[0].service.per_passanger_price) + \
+            int(passenger) * int(return_query[0].service.per_passanger_price)
+
+        query_id = Query.objects.create(attrs=query_dict)
+        context['one_side_query'] = one_side_query
+        context['return_query'] = return_query
+        context['query_id'] = query_id.id
         return render(request, self.template_name, {"context": context})
 
-    # def get_ajax_context_data(self, request):
 
-    # def get(self, request, *args, **kwargs):
-    #     context = 'Hello'
-    #     if request.GET.get('action') == 'query':
-    #         return render(request, self.template_name, {'context': context})
-    #     else:
-    #         return render(request, self.template_name, {'context': context})
+class OrderView(DetailView):
+    model = Query
+    template_name = 'booking/checkout_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderView, self).get_context_data(**kwargs)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = dict()
+        query_response = Query.objects.filter(id=int(request.POST['query_id']))
+        context = query_response[0].attrs
+        return render(request, self.template_name, {'context': context})
 
 
-# clas
+class SucessView(ListView):
+    # model = Query
+    template_name = 'booking/success_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderView, self).get_context_data(**kwargs)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})

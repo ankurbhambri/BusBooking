@@ -16,57 +16,82 @@
 </nav>
 
 <body>
-	<div style="margin: 20px;"><h5>List of Routes and Timings</h5></div>
-    <div class="row" style="margin: 10px">
-<!--         {% for data in context.query%}
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %} -->
-<!--         <div class="col-sm-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-        </div> -->
-        <table class="table table-striped">
-            <tr>
-                <th style="font-size: 10px;">Source</th>
-                <th style="font-size: 10px;">Destination</th>
-                <th style="font-size: 10px;">Passenger seats avaliable</th>
-                <th style="font-size: 10px;">Per Passenger seat price</th>
-                <th style="font-size: 10px;">Departure Location</th>
-                <th style="font-size: 10px;">Arrival Location</th>
-                <th style="font-size: 10px;">Departure Time</th>
-                <th style="font-size: 10px;">Arrival Time</th>
-                <th style="font-size: 10px;">Select</th>
-            </tr>
-            {% for object in context.query %}
-            <tr>
-                <td style="font-size: 10px;">{{ object.service.source }}</td>
-                <td style="font-size: 10px;">{{ object.service.destination }}</td>
-                <td style="font-size: 10px;">{{ object.service.passanger_capacity }}</td>
-                <td style="font-size: 10px;">{{ object.service.per_passanger_price }}</td>
-                <td style="font-size: 10px;">{{ object.service.souce_bus_stand_location }}</td>
-                <td style="font-size: 10px;">{{ object.service.destination_bus_stand_location }}</td>
-                <td style="font-size: 10px;">{{ object.departure_time }}</td>
-                <td style="font-size: 10px;">{{ object.desstination_time }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+    <div style="margin: 20px;">
+        <h5>List of Routes and Timings</h5>
     </div>
+    <form method="post" action="{% url "orderview" context.query_id %}">
+        {% csrf_token %}
+        <div class="row" style="margin: 10px">
+            <h5>Onward Services</h5>
+            <table class="table table-striped">
+                <tr>
+                    <th style="font-size: 15px;">Select</th>
+                    <th style="font-size: 15px;">Source</th>
+                    <th style="font-size: 15px;">Destination</th>
+                    <th style="font-size: 15px;">Passenger seats avaliable</th>
+                    <th style="font-size: 15px;">Per Passenger seat price</th>
+                    <th style="font-size: 15px;">Departure Location</th>
+                    <th style="font-size: 15px;">Arrival Location</th>
+                    <th style="font-size: 15px;">Departure Time</th>
+                    <th style="font-size: 15px;">Arrival Time</th>
+                </tr>
+                {% for object in context.one_side_query %}
+                <tr>
+                    <input type="hidden" name="query_id" value={{context.query_id}}>
+                    <td><input type="checkbox" name="one_side" value={{object.id}} />&nbsp;</td>
+                    <td style="font-size: 15px;">{{ object.service.source }}</td>
+                    <td style="font-size: 15px;">{{ object.service.destination }}</td>
+                    <td style="font-size: 15px;">{{ object.service.passanger_capacity }}</td>
+                    <td style="font-size: 15px;">{{ object.service.per_passanger_price }}</td>
+                    <td style="font-size: 15px;">{{ object.service.souce_bus_stand_location }}</td>
+                    <td style="font-size: 15px;">{{ object.service.destination_bus_stand_location }}</td>
+                    <td style="font-size: 15px;">{{ object.departure_time }}</td>
+                    <td style="font-size: 15px;">{{ object.desstination_time }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% if context.return_query %}
+        <div style="margin: 10px">
+            <h5>Return Services</h5>
+            <table class="table table-striped">
+                <tr>
+                    <th style="font-size: 15px;">Select</th>
+                    <th style="font-size: 15px;">Source</th>
+                    <th style="font-size: 15px;">Destination</th>
+                    <th style="font-size: 15px;">Passenger seats avaliable</th>
+                    <th style="font-size: 15px;">Per Passenger seat price</th>
+                    <th style="font-size: 15px;">Departure Location</th>
+                    <th style="font-size: 15px;">Arrival Location</th>
+                    <th style="font-size: 15px;">Departure Time</th>
+                    <th style="font-size: 15px;">Arrival Time</th>
+                </tr>
+                {% for object in context.return_query %}
+                <tr>
+                    <td><input type="checkbox" name="return_side" value={{object.id}} />&nbsp;</td>
+                    <td style="font-size: 15px;">{{ object.service.source }}</td>
+                    <td style="font-size: 15px;">{{ object.service.destination }}</td>
+                    <td style="font-size: 15px;">{{ object.service.passanger_capacity }}</td>
+                    <td style="font-size: 15px;">{{ object.service.per_passanger_price }}</td>
+                    <td style="font-size: 15px;">{{ object.service.souce_bus_stand_location }}</td>
+                    <td style="font-size: 15px;">{{ object.service.destination_bus_stand_location }}</td>
+                    <td style="font-size: 15px;">{{ object.departure_time }}</td>
+                    <td style="font-size: 15px;">{{ object.desstination_time }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+        <div style="float: right; margin: 10px;">
+            <button type="submitt">Book Bus</button>
+        </div>
+    </form>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="text/javascript"></script>
+<script type="text/javascript">
+</script>
 
 </html>

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import HStoreField
+from django.contrib.postgres.fields import JSONField
 # Create your models here.
 
 class CustomerLogin(models.Model):
@@ -72,6 +72,6 @@ class BusTiming(models.Model):
 
 class Query(models.Model):
 
-    attrs = HStoreField()
+    attrs = JSONField()
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)

@@ -1,18 +1,18 @@
 from django.contrib import admin
-from booking.models import (CustomerLogin, VehicalDetail,
+from booking.models import (VehicalDetail,
                             DriverDetail, BusService, BusTiming,
                             Query)
 
 
 # Register your models here.
-@admin.register(CustomerLogin)
+# @admin.register(CustomerLogin)
 class CustomerLoginAdmin(admin.ModelAdmin):
     list_display = ("id", "first_name", "last_name",
                     "customer_email", "phone_number", "address",
                     "city", "state", "pincode",
                     "created_date", "modified_date")
     search_fields = ("id", "first_name", "last_name",
-                    "customer_email", "phone_number")
+                     "customer_email", "phone_number")
 
 
 @admin.register(VehicalDetail)
@@ -26,7 +26,7 @@ class VehicalDetailAdmin(admin.ModelAdmin):
 @admin.register(DriverDetail)
 class DriverDetailAdmin(admin.ModelAdmin):
     list_display = ("driver_name", "driver_email", "driver_phone_no",
-                   "driver_adress", "driver_licence")
+                    "driver_adress", "driver_licence")
 
     search_fields = ("driver_email", "driver_phone_no", "driver_licence")
 
@@ -44,8 +44,8 @@ class BusServiceAdmin(admin.ModelAdmin):
                     "passanger_capacity", "per_passanger_price", "driver_email",
                     "created_date", "modified_date")
 
-    inlines = [BusTimingAdmin,]
-    
+    inlines = [BusTimingAdmin, ]
+
     raw_id_fields = ('driver_email',)
 
 
@@ -54,5 +54,3 @@ class QueryAdmin(admin.ModelAdmin):
 
     list_display = ("attrs", "created_date", "modified_date")
     search_fields = ("id",)
-
-
