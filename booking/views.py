@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.views import View
+from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import TemplateView, ListView, DetailView
-from booking.models import BusService, BusTiming, Query
+from booking.models import BusService, BusTiming, Query, CustomerLogin
 
 
 class HomePageView(TemplateView):
@@ -103,4 +105,22 @@ class SucessView(ListView):
         return context
 
     def post(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+
+class RegisterView(ListView):
+
+    model = CustomerLogin
+    template_name = 'booking/register.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterView, self).get_context_data(**kwargs)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        # form = UserCreationForm(request.POST)
+        # if form.is_valid():
+        #     user = form.save()
+        #     return redirect(reverse('login'))
+
         return render(request, self.template_name, {})
