@@ -21,9 +21,11 @@ from django.conf.urls.static import static
 admin.site.site_header = "Bus Booking Admin Central"
 
 urlpatterns = [
-    path('depadmin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', include('booking.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

@@ -4,17 +4,6 @@ from booking.models import (VehicalDetail,
                             Query)
 
 
-# Register your models here.
-# @admin.register(CustomerLogin)
-class CustomerLoginAdmin(admin.ModelAdmin):
-    list_display = ("id", "first_name", "last_name",
-                    "customer_email", "phone_number", "address",
-                    "city", "state", "pincode",
-                    "created_date", "modified_date")
-    search_fields = ("id", "first_name", "last_name",
-                     "customer_email", "phone_number")
-
-
 @admin.register(VehicalDetail)
 class VehicalDetailAdmin(admin.ModelAdmin):
     list_display = ("vehicle_name", "vehicle_registration_number",

@@ -1,8 +1,9 @@
-from django.views import View
-from django.shortcuts import render, redirect, reverse
-from django.contrib.auth.forms import UserCreationForm
+import re
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, ListView, DetailView
-from booking.models import BusService, BusTiming, Query, CustomerLogin
+from booking.models import BusService, BusTiming, Query
 
 
 class HomePageView(TemplateView):
@@ -20,6 +21,8 @@ class HomePageView(TemplateView):
             else:
                 chain_dict[key].append(value)
         context['chain_dict'] = chain_dict
+        context['login_user'] = self.request.user.username
+        print(self.request.user.username)
         return context
 
 
@@ -33,7 +36,7 @@ class BookingListView(ListView):
         return context
 
     def post(self, request, *args, **kwargs):
-        context = dict()
+        response_data = dict()
         query_dict = dict()
         choice1 = request.POST.get('choice1')
         choice2 = request.POST.get('choice2')
@@ -75,24 +78,39 @@ class BookingListView(ListView):
             int(passenger) * int(return_query[0].service.per_passanger_price)
 
         query_id = Query.objects.create(attrs=query_dict)
-        context['one_side_query'] = one_side_query
-        context['return_query'] = return_query
-        context['query_id'] = query_id.id
-        return render(request, self.template_name, {"context": context})
+        response_data['one_side_query'] = one_side_query
+        response_data['return_query'] = return_query
+        response_data['query_id'] = query_id.id
+        response_data['login_user'] = self.request.user.username
+        return render(request, self.template_name, {"response_data": response_data})
 
 
 class OrderView(DetailView):
     model = Query
     template_name = 'booking/checkout_page.html'
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderView, self).dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(OrderView, self).get_context_data(**kwargs)
         return context
+
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        path = self.request.get_full_path()
+        query_id = re.findall('\d+', path)
+        query_response = Query.objects.filter(id=int(query_id[0]))
+        context = query_response[0].attrs
+        context['login_user'] = self.request.user.username
+        return render(request, self.template_name, {'context': context})
 
     def post(self, request, *args, **kwargs):
         context = dict()
         query_response = Query.objects.filter(id=int(request.POST['query_id']))
         context = query_response[0].attrs
+        context['login_user'] = self.request.user.username
         return render(request, self.template_name, {'context': context})
 
 
@@ -101,26 +119,8 @@ class SucessView(ListView):
     template_name = 'booking/success_page.html'
 
     def get_context_data(self, **kwargs):
-        context = super(OrderView, self).get_context_data(**kwargs)
+        context = super(SucessView, self).get_context_data(**kwargs)
         return context
 
     def post(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
-
-
-class RegisterView(ListView):
-
-    model = CustomerLogin
-    template_name = 'booking/register.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(RegisterView, self).get_context_data(**kwargs)
-        return context
-
-    def post(self, request, *args, **kwargs):
-        # form = UserCreationForm(request.POST)
-        # if form.is_valid():
-        #     user = form.save()
-        #     return redirect(reverse('login'))
-
         return render(request, self.template_name, {})
