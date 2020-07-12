@@ -86,11 +86,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'booking',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
+        # 'NAME': 'booking',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'root',
+        # 'HOST': 'localhost',
+        # 'PORT': '5432',
+        'NAME': 'ppcazine',
+        'USER': 'ppcazine',
+        'PASSWORD': 'Hx17_KF9iab-EL7bizHv-mJzcfB5lSJc',
+        'HOST': 'ruby.db.elephantsql.com',
         'PORT': '5432',
+
     }
 }
 
