@@ -1,5 +1,7 @@
 import re
 from django.shortcuts import render
+from django.conf import settings
+from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, ListView, DetailView
@@ -47,16 +49,19 @@ class BookingListView(ListView):
             service__source=choice1, service__destination=choice2,
             service__passanger_capacity__gte=passenger)
 
-        query_dict['one_side'] = {
-            'source': choice1,
-            'destination': choice2,
-            'passenger': int(passenger),
-            'journey_date': date,
-            'departure_location': one_side_query[0].service.souce_bus_stand_location,
-            'arival_location': one_side_query[0].service.destination_bus_stand_location,
-            'departure_time': one_side_query[0].departure_time.strftime("%m/%d/%Y"),
-            'desstination_time': one_side_query[0].desstination_time.strftime("%m/%d/%Y"),
-            'total_price': int(passenger) * int(one_side_query[0].service.per_passanger_price)}
+        if one_side_query:
+            query_dict['one_side'] = {
+                'source': choice1,
+                'destination': choice2,
+                'passenger': int(passenger),
+                'journey_date': date,
+                'vehicle_name': one_side_query[0].service.vehicle.vehicle_name,
+                'departure_location': one_side_query[0].service.souce_bus_stand_location,
+                'arival_location': one_side_query[0].service.destination_bus_stand_location,
+                'departure_time': one_side_query[0].departure_time.strftime("%H:%M:%S:%P"),
+                'desstination_time': one_side_query[0].desstination_time.strftime("%H:%M:%S:%P"),
+                'total_price': int(passenger) * int(one_side_query[0].service.per_passanger_price),
+                'ac': 'Air Conditioned' if one_side_query[0].service.vehicle.ac else 'Non AC'}
 
         return_query = BusTiming.objects.filter(
             service__source=choice2, service__destination=choice1,
@@ -68,15 +73,16 @@ class BookingListView(ListView):
                 'destination': choice1,
                 'passenger': int(passenger),
                 'journey_date': date,
+                'vehicle_name': return_query[0].service.vehicle.vehicle_name,
                 'departure_location': return_query[0].service.souce_bus_stand_location,
                 'arival_location': return_query[0].service.destination_bus_stand_location,
-                'departure_time': return_query[0].departure_time.strftime("%m/%d/%Y"),
-                'desstination_time': return_query[0].desstination_time.strftime("%m/%d/%Y"),
-                'total_price': int(passenger) * int(return_query[0].service.per_passanger_price)}
+                'departure_time': return_query[0].departure_time.strftime("%H:%M:%S:%P"),
+                'desstination_time': return_query[0].desstination_time.strftime("%H:%M:%S:%P"),
+                'total_price': int(passenger) * int(return_query[0].service.per_passanger_price),
+                'ac': 'Air Conditioned' if return_query[0].service.vehicle.ac else 'Non AC'}
 
         query_dict['amt'] = int(passenger) * int(one_side_query[0].service.per_passanger_price) + \
             int(passenger) * int(return_query[0].service.per_passanger_price)
-
         query_id = Query.objects.create(attrs=query_dict)
         response_data['one_side_query'] = one_side_query
         response_data['return_query'] = return_query
@@ -108,8 +114,15 @@ class CheckoutView(DetailView):
 
     def post(self, request, *args, **kwargs):
         context = dict()
+        amt = 0
         query_response = Query.objects.filter(id=int(request.POST['query_id']))
-        context = query_response[0].attrs
+        if request.POST.get('one_side'):
+            context['one_side'] = query_response[0].attrs['one_side']
+            amt += query_response[0].attrs['one_side']['total_price']
+        if request.POST.get('return_side'):
+            context['return_query'] = query_response[0].attrs['return_query']
+            amt += query_response[0].attrs['one_side']['total_price']
+        context['amt'] = amt
         context['query_id'] = query_response[0].id
         context['login_user'] = self.request.user.username
         return render(request, self.template_name, {'context': context})
@@ -128,4 +141,15 @@ class SucessView(ListView):
         query_obj = Query.objects.filter(id=query_id)
         order = OrderTable.objects.create(user=self.request.user,
                                           query=query_obj[0])
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [request.user.email]
+        name = request.user.first_name + ' ' + request.user.last_name
+        send_mail(
+            'BusBooking',
+            ' Hi, ' + name
+            + '\n Confirmation on your order booking and thank you for choosing us your order id is ' +
+            'bus' + str(order.id)
+            + '\n Stay Safe and obey all corona virus methods',
+            from_email,
+            recipient_list, fail_silently=False)
         return render(request, self.template_name, {"order": order})

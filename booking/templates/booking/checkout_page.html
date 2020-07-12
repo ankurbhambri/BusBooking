@@ -143,6 +143,7 @@
 </nav>
 
 <body>
+    {% if context.one_side %}
     <div class="row" style="margin: 10px">
         <h6>Onward Schedule</h6>
         <table class="table table-striped">
@@ -168,6 +169,7 @@
             </tr>
         </table>
     </div>
+    {% endif %}
     {% if context.return_query %}
     <div style="margin: 10px">
         <h6>Return Schedule</h6>
@@ -218,19 +220,19 @@
                         </div>
                         <input type="hidden" name="query_id" value={{context.query_id}}>
                         <label for="cname">Name on Card</label>
-                        <input type="text" id="cname" name="cardname" placeholder="ex - John More Doe">
+                        <input type="text" id="cname" name="cardname" placeholder="ex - John More Doe" required>
                         <label for="ccnum">Credit card number</label>
-                        <input type="text" id="ccnum" name="cardnumber" placeholder="ex - 1111-2222-3333-4444">
+                        <input type="text" id="ccnum" name="cardnumber" placeholder="ex - 1111-2222-3333-4444" required>
                         <label for="expmonth">Exp Month</label>
-                        <input type="text" id="expmonth" name="expmonth" placeholder="ex - September">
+                        <input type="text" id="expmonth" name="expmonth" placeholder="ex - September" required>
                         <div class="row">
                             <div class="col-50">
                                 <label for="expyear">Exp Year</label>
-                                <input type="text" id="expyear" name="expyear" placeholder="ex - 2018">
+                                <input type="text" id="expyear" name="expyear" placeholder="ex - 2018" required>
                             </div>
                             <div class="col-50">
                                 <label for="cvv">CVV</label>
-                                <input type="text" id="cvv" name="cvv" placeholder="ex - 123">
+                                <input type="text" id="cvv" name="cvv" placeholder="ex - 123" required>
                             </div>
                         </div>
                         <label for="expmonth">Total Amount</label>

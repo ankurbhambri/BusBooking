@@ -42,6 +42,7 @@
  	<div class="row" style="margin: 10px">
         <table class="table table-striped">
             <tr>
+                <th style="font-size: 15px;">Vehicle Name</th>
                 <th style="font-size: 15px;">Source</th>
                 <th style="font-size: 15px;">Destination</th>
                 <th style="font-size: 15px;">Departure Location</th>
@@ -50,6 +51,7 @@
                 <th style="font-size: 15px;">Arrival Time</th>
                 <th style="font-size: 15px;">Journey Date</th>
                 <th style="font-size: 15px;">Total Amount</th>
+                <th style="font-size: 15px;">AC/Non AC</th>
                 <th style="font-size: 15px;">Cancel your journey</th>
             </tr>
  		{% for object in context.user_orders %}
@@ -57,6 +59,7 @@
         	{% csrf_token %}
  			{% if object.query.attrs.one_side %}
             <tr>
+                <td style="font-size: 15px;">{{ object.query.attrs.one_side.vehicle_name }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.one_side.source }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.one_side.destination }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.one_side.departure_location }}</td>
@@ -65,6 +68,7 @@
                 <td style="font-size: 15px;">{{ object.query.attrs.one_side.desstination_time }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.one_side.journey_date }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.one_side.total_price }}</td>
+                <td style="font-size: 15px;">{{ object.query.attrs.one_side.ac }}</td>
                 <input type="hidden" name="onward_side" value={{object.id}}>
                 <td><button type="submit" id="onward_cancel" class="btn btn-danger">Cancel</button></td>
             </tr>
@@ -74,6 +78,7 @@
         	{% csrf_token %}
     		{% if object.query.attrs.return_query %}
             <tr>
+                <td style="font-size: 15px;">{{ object.query.attrs.return_query.vehicle_name }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.return_query.source }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.return_query.destination }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.return_query.departure_location }}</td>
@@ -82,6 +87,7 @@
                 <td style="font-size: 15px;">{{ object.query.attrs.return_query.desstination_time }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.return_query.journey_date }}</td>
                 <td style="font-size: 15px;">{{ object.query.attrs.return_query.total_price }}</td>
+                <td style="font-size: 15px;">{{ object.query.attrs.return_query.ac }}</td>
                 <input type="hidden" name="return_side" value={{object.id}}>
                 <td><button type="submit" id="return_cancel" class="btn btn-danger">Cencel</button></td>
             </tr>

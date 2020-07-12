@@ -20,8 +20,6 @@ class OrderPageView(ListView):
 
     def post(self, request, *args, **kwargs):
         context = dict()
-        import ipdb
-        ipdb.set_trace()
         if request.POST.get('onward_side'):
             order_id = OrderTable.objects.filter(
                 id=int(request.POST.get('onward_side')))[0]

@@ -50,19 +50,22 @@
             <table class="table table-striped">
                 <tr>
                     <th style="font-size: 15px;">Select</th>
+                    <th style="font-size: 15px;">Vehicle Name</th>
                     <th style="font-size: 15px;">Source</th>
                     <th style="font-size: 15px;">Destination</th>
-                    <th style="font-size: 15px;">Passenger seats avaliable</th>
+                    <th style="font-size: 15px;">Seat Capacity</th>
                     <th style="font-size: 15px;">Per Passenger seat price</th>
                     <th style="font-size: 15px;">Departure Location</th>
                     <th style="font-size: 15px;">Arrival Location</th>
                     <th style="font-size: 15px;">Departure Time</th>
                     <th style="font-size: 15px;">Arrival Time</th>
+                    <th style="font-size: 15px;">AC/Non AC</th>
                 </tr>
                 {% for object in response_data.one_side_query %}
                 <tr>
                     <input type="hidden" name="query_id" value={{response_data.query_id}}>
                     <td><input type="checkbox" name="one_side" value={{object.id}} />&nbsp;</td>
+                    <td style="font-size: 15px;">{{ object.service.vehicle.vehicle_name }}</td>
                     <td style="font-size: 15px;">{{ object.service.source }}</td>
                     <td style="font-size: 15px;">{{ object.service.destination }}</td>
                     <td style="font-size: 15px;">{{ object.service.passanger_capacity }}</td>
@@ -71,6 +74,11 @@
                     <td style="font-size: 15px;">{{ object.service.destination_bus_stand_location }}</td>
                     <td style="font-size: 15px;">{{ object.departure_time }}</td>
                     <td style="font-size: 15px;">{{ object.desstination_time }}</td>
+                    {% if object.service.vehicle.ac %}
+                        <td style="font-size: 15px;">Air Conditioned</td>
+                    {% else %}
+                        <td style="font-size: 15px;">Non AC</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>
@@ -81,18 +89,21 @@
             <table class="table table-striped">
                 <tr>
                     <th style="font-size: 15px;">Select</th>
+                    <th style="font-size: 15px;">Vehicle Name</th>
                     <th style="font-size: 15px;">Source</th>
                     <th style="font-size: 15px;">Destination</th>
-                    <th style="font-size: 15px;">Passenger seats avaliable</th>
+                    <th style="font-size: 15px;">Seat Capacity</th>
                     <th style="font-size: 15px;">Per Passenger seat price</th>
                     <th style="font-size: 15px;">Departure Location</th>
                     <th style="font-size: 15px;">Arrival Location</th>
                     <th style="font-size: 15px;">Departure Time</th>
                     <th style="font-size: 15px;">Arrival Time</th>
+                    <th style="font-size: 15px;">AC/Non AC</th>
                 </tr>
                 {% for object in response_data.return_query %}
                 <tr>
                     <td><input type="checkbox" name="return_side" value={{object.id}} />&nbsp;</td>
+                    <td style="font-size: 15px;">{{ object.service.vehicle.vehicle_name }}</td>
                     <td style="font-size: 15px;">{{ object.service.source }}</td>
                     <td style="font-size: 15px;">{{ object.service.destination }}</td>
                     <td style="font-size: 15px;">{{ object.service.passanger_capacity }}</td>
@@ -101,6 +112,11 @@
                     <td style="font-size: 15px;">{{ object.service.destination_bus_stand_location }}</td>
                     <td style="font-size: 15px;">{{ object.departure_time }}</td>
                     <td style="font-size: 15px;">{{ object.desstination_time }}</td>
+                    {% if object.service.vehicle.ac %}
+                        <td style="font-size: 15px;">Air Conditioned</td>
+                    {% else %}
+                        <td style="font-size: 15px;">Non AC</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>
