@@ -2,6 +2,7 @@ from django.views.generic import FormView, ListView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+from accounts.forms import SignUpForm
 
 
 class RegisterView(FormView):
@@ -16,20 +17,21 @@ class RegisterView(FormView):
     def get(self, request, *args, **kwargs):
         context = {}
         context['redirect_url'] = self.request.GET.get('next')
-        form = UserCreationForm()
+        form = SignUpForm()
         context['form'] = form
+        context['error'] = request.session.get('signup')
         return render(request, self.template_name, {'context': context})
 
     def post(self, request, *args, **kwargs):
         context = {}
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         context['form'] = form
         redirect_url = request.POST.get('nexturl')
         if form.is_valid():
             form.save()
         else:
+            request.session['signup'] = form.errors
             return redirect(self.request.get_full_path() + '?next=' + redirect_url)
-            # return render(request, self.template_name, {'context': context})
         user = authenticate(username=form.cleaned_data['username'],
                             password=form.cleaned_data['password1'])
         if user:

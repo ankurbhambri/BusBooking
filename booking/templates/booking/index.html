@@ -46,7 +46,7 @@
                       aria-haspopup="true" aria-expanded="false">{{login_user}}</a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-default"
                       aria-labelledby="navbarDropdownMenuLink-333">
-                      <a class="dropdown-item" href="#">Profile</a>
+                      <a class="dropdown-item" href="{% url "orderview" %}">Your orders</a>
                       <a class="dropdown-item" href="{% url "logout" %}">Logout</a>
                     </div>
                   </li>
@@ -93,9 +93,9 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="label">Number of Passenger</label>
+                                <label class="label">Number of Passengers</label>
                                 <input id="passenger" name="passenger" type="text" class="form-control"
-                                placeholder="Enter number of passenger" required>
+                                placeholder="Enter number of passengers" style="font-weight: bold;" required>
                             </div>
                             <div class="d-flex">
                                 <div class="form-group mr-2">

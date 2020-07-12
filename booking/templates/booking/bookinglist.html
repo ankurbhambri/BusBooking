@@ -43,7 +43,7 @@
     <div style="margin: 20px;">
         <h5>List of Routes and Timings</h5>
     </div>
-    <form method="post" action="{% url "orderview" response_data.query_id %}">
+    <form method="post" action="{% url "bookingview" response_data.query_id %}">
         {% csrf_token %}
         <div class="row" style="margin: 10px">
             <h5>Onward Services</h5>

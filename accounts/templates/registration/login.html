@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        #id_username, #id_password1, #id_password2{
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <!-- Material form register -->
 
@@ -36,7 +48,7 @@
                             <div class="form-group">
                                 <p>Not yet Register ? <a href="{% url "register" %}?next={{context.redirect_url}}">Register</a></p>
                                 {% if context.error %}
-                                <h6 style="font-style: italic;">{{context.error}}</h6>
+                                <h6 style="font-style: italic; background-color: yellow;">{{context.error}}</h6>
                                 {% endif %}
                                 <input id="login" type="submit" value="Submitt">
                             </div>

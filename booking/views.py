@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, ListView, DetailView
 from booking.models import BusService, BusTiming, Query
+from orders.models import OrderTable
 
 
 class HomePageView(TemplateView):
@@ -22,7 +23,6 @@ class HomePageView(TemplateView):
                 chain_dict[key].append(value)
         context['chain_dict'] = chain_dict
         context['login_user'] = self.request.user.username
-        print(self.request.user.username)
         return context
 
 
@@ -85,16 +85,16 @@ class BookingListView(ListView):
         return render(request, self.template_name, {"response_data": response_data})
 
 
-class OrderView(DetailView):
+class CheckoutView(DetailView):
     model = Query
     template_name = 'booking/checkout_page.html'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(OrderView, self).dispatch(*args, **kwargs)
+        return super(CheckoutView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(OrderView, self).get_context_data(**kwargs)
+        context = super(CheckoutView, self).get_context_data(**kwargs)
         return context
 
     def get(self, request, *args, **kwargs):
@@ -110,12 +110,13 @@ class OrderView(DetailView):
         context = dict()
         query_response = Query.objects.filter(id=int(request.POST['query_id']))
         context = query_response[0].attrs
+        context['query_id'] = query_response[0].id
         context['login_user'] = self.request.user.username
         return render(request, self.template_name, {'context': context})
 
 
 class SucessView(ListView):
-    # model = Query
+    model = OrderTable
     template_name = 'booking/success_page.html'
 
     def get_context_data(self, **kwargs):
@@ -123,4 +124,8 @@ class SucessView(ListView):
         return context
 
     def post(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+        query_id = int(request.POST['query_id'])
+        query_obj = Query.objects.filter(id=query_id)
+        order = OrderTable.objects.create(user=self.request.user,
+                                          query=query_obj[0])
+        return render(request, self.template_name, {"order": order})

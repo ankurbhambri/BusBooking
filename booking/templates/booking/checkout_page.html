@@ -120,6 +120,7 @@
   }
 </style>
 </head>
+
 <nav class="mb-1 navbar navbar-expand-lg navbar-dark default-color">
   <a class="navbar-brand" href="{% url "home" %}">BusBooking</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
@@ -140,6 +141,7 @@
     </ul>
   </div>
 </nav>
+
 <body>
     <div class="row" style="margin: 10px">
         <h6>Onward Schedule</h6>
@@ -214,6 +216,7 @@
                             <i class="fa fa-cc-mastercard" style="color:red;"></i>
                             <i class="fa fa-cc-discover" style="color:orange;"></i>
                         </div>
+                        <input type="hidden" name="query_id" value={{context.query_id}}>
                         <label for="cname">Name on Card</label>
                         <input type="text" id="cname" name="cardname" placeholder="ex - John More Doe">
                         <label for="ccnum">Credit card number</label>
